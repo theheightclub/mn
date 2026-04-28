@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Height Club | Өсөлтийн систем</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808;
+    --bg2: #0f0f0f;
+    --card: #141414;
+    --border: #222;
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #fff;
+    --blue: #3b6ff5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; }
+  .nav-btn {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 24px 60px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 0%, #1a1a2e 0%, var(--bg) 70%);
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 14vw, 96px);
+    line-height: 1.0;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .hero h1 span { color: var(--muted); }
+  .hero p {
+    color: var(--muted); font-size: 16px;
+    max-width: 340px; margin: 0 auto 40px;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--accent); color: #000;
+    padding: 16px 40px; border-radius: 50px;
+    font-weight: 700; font-size: 16px;
+    text-decoration: none; cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,0.15); }
+  .btn-secondary {
+    display: inline-block;
+    background: transparent; color: var(--text);
+    padding: 16px 40px; border-radius: 50px;
+    font-weight: 600; font-size: 16px;
+    text-decoration: none; cursor: pointer;
+    border: 1px solid var(--border);
+    margin-top: 12px;
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: #555; }
+  .hero-btns { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+  /* PROBLEM */
+  .section { padding: 80px 24px; }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 10vw, 64px);
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .section-sub { color: var(--muted); font-size: 15px; max-width: 360px; margin-bottom: 40px; }
+
+  .problem-list { display: flex; flex-direction: column; gap: 12px; }
+  .problem-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    font-size: 17px; font-weight: 500;
+  }
+
+  /* VALUE PROP */
+  .value-section {
+    padding: 80px 24px;
+    background: var(--bg2);
+  }
+  .value-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .value-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .value-card p { color: var(--muted); font-size: 14px; }
+
+  /* STEPS */
+  .steps-section { padding: 80px 24px; }
+  .step { display: flex; gap: 20px; margin-bottom: 48px; position: relative; }
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px; top: 44px;
+    width: 2px; height: calc(100% + 4px);
+    background: var(--border);
+  }
+  .step-num {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: var(--blue); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; z-index: 1;
+  }
+  .step-content h3 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .step-content p { color: var(--muted); font-size: 14px; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 80px 24px; background: var(--bg2); }
+  .testimonial {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .testimonial-name { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+  .testimonial p { color: var(--muted); font-size: 14px; font-style: italic; }
+
+  /* PRICING */
+  .pricing { padding: 80px 24px; text-align: center; }
+  .price-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 24px;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .popular-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--blue); color: #fff;
+    padding: 4px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  }
+  .price-label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price-sub { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+  .price-features { text-align: left; margin-bottom: 32px; }
+  .price-feature {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .price-feature:last-child { border-bottom: none; }
+  .check { color: var(--blue); font-size: 16px; }
+
+  /* PAYMENT */
+  .payment {
+    padding: 80px 24px;
+    background: var(--bg2);
+    text-align: center;
+  }
+  .payment-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 24px;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .payment-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; margin-bottom: 24px; text-align: center;
+  }
+  .payment-info { margin-bottom: 16px; }
+  .payment-info .label { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  .payment-info .value { font-size: 16px; font-weight: 600; }
+  .payment-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .payment-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+  /* FAQ */
+  .faq { padding: 80px 24px; }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  .faq-q { font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { color: var(--muted); font-size: 14px; margin-top: 12px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-icon { font-size: 20px; color: var(--muted); }
+
+  /* CTA */
+  .cta {
+    padding: 100px 24px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 100%, #1a1a2e 0%, var(--bg) 70%);
+  }
+  .cta h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 12vw, 80px);
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .cta p { color: var(--muted); margin-bottom: 40px; }
+
+  /* FOOTER */
+  footer {
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero h1, .hero p, .hero-btns { animation: fadeUp 0.7s ease both; }
+  .hero p { animation-delay: 0.1s; }
+  .hero-btns { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">THE HEIGHT CLUB</div>
+  <a href="#payment" class="nav-btn">Одоо авах</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>ЧИ ОРОЙТСОНДОО БИШ.<br><span>ЧИ БУДИЛСАНДАА Л</span><br>ГАЦЧИХСАН БАЙГАА.</h1>
+  <p>THE HEIGHT CLUB бол будилаанаас гарч, илүү зөвөөр эхлэхэд зориулсан бүтэц.</p>
+  <div class="hero-btns">
+    <a href="#payment" class="btn-primary">Зөвөөр эхлэх</a>
+    <a href="#about" class="btn-secondary">Дэлгэрэнгүй</a>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section" id="about">
+  <h2 class="section-title">ЧИ ХАНГАЛТТАЙ УДААН БУДИЛСАН.</h2>
+  <p class="section-sub">Интернэтэд дүүрэн зөвлөгөө байгаа. Гэхдээ ихэнх нь чамд яг юунаас, ямар дарааллаар эхлэхийг хэзээ ч ойлгуулдаггүй.</p>
+  <div class="problem-list">
+    <div class="problem-item">Random дасгал хийж цагаа үрэх</div>
+    <div class="problem-item">Юу нь үр дүнтэйг мэдэхгүй эргэлзэх</div>
+    <div class="problem-item">Хэдэн өдөр хийгээд л урам хугарах</div>
+    <div class="problem-item">Өөрийгөө бусадтай харьцуулж оройтсон юм биш биз гэж боддог</div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section class="value-section">
+  <h2 class="section-title">ИТГЭЛТЭЙ БАЙДАЛ ИХЭНХДЭЭ ДОТРООС БИШ, АХИЦААС ИРДЭГ.</h2>
+  <p class="section-sub">Чамд зүгээр л урам хэрэггүй. Чамд илүү ойлгомжтой чиглэл хэрэгтэй.</p>
+  <div class="value-card">
+    <h3>🕐 Тодорхой эхлэл</h3>
+    <p>Юунаас эхлэхээ мэдэхгүй байх үе дуусна.</p>
+  </div>
+  <div class="value-card">
+    <h3>⚡ Зөв дараалал</h3>
+    <p>Хамгийн чухал зүйлдээ түрүүлж төвлөрнө.</p>
+  </div>
+  <div class="value-card">
+    <h3>🎯 Ойлгомжтой бүтэц</h3>
+    <p>Бүх мэдээлэл чинь нэг системд орно.</p>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+  <h2 class="section-title">ИЛҮҮ ИХ МЭДЭЭЛЭЛ БИШ.<br>ИЛҮҮ ЗӨВ ЧИГЛЭЛ.</h2>
+  <p class="section-sub">Энэ ebook чамд илүү их мэдээлэл өгөхгүй. Харин илүү зөв чиглэл өгнө.</p>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Яг юунаас эхлэх вэ?</h3>
+      <p>Анхны алхмыг тодорхой болгоно.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Юуг анх түрүүнд засах вэ?</h3>
+      <p>Хамгийн их нөлөөтэй өөрчлөлтөөс эхэлнэ.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Юуг анзаарахгүй өнгөрөөж болохгүй вэ?</h3>
+      <p>Олон хүн алддаг чухал зүйлсийг тодруулна.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Юуг хэрэггүй гэж ойлгох вэ?</h3>
+      <p>Цагаа үрүүлдэг зүйлсийг арилгана.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Өөртөө тааруулж яаж хэрэгжүүлэх вэ?</h3>
+      <p>Чиний нөхцөлд яг тохирсон систем.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <h2 class="section-title">ХҮМҮҮС ЮУ ГЭЖ ХЭЛСЭН БЭ?</h2>
+  <p class="section-sub">Ихэнх хүмүүсийн хамгийн түрүүнд хэлдэг зүйл нь нэг байдаг — одоо ядаж юунд төвлөрөхөө ойлгосон.</p>
+  <div class="testimonial">
+    <div class="testimonial-name">Б. Тэмүүлэн</div>
+    <p>"Үнэндээ зүгээр л юу хийхээ мэдэхгүй төөрч явсан байлаа. Одоо ядаж толгой дотор бүх юм цэгцэрсэн. Баярлалаа."</p>
+  </div>
+  <div class="testimonial">
+    <div class="testimonial-name">А. Ганзориг</div>
+    <p>"Өмнө нь зөндөө юм туршиж үзсэн ч яг яах ёстойгоо ойлгодоггүй байж. Энэ ebook-ийг уншаад л 'аан ийм байсан юм уу' гэж бодсон."</p>
+  </div>
+  <div class="testimonial">
+    <div class="testimonial-name">М. Энхбаяр</div>
+    <p>"Хамгийн гол нь системтэй. Юуны дараа юу хийх вэ гэдэг нь маш тодорхой. Залуust санал болгоно."</p>
+  </div>
+  <div class="testimonial">
+    <div class="testimonial-name">С. Бат-Эрдэнэ</div>
+    <p>"Confidence-д маш их нөлөөлсөн. Зүгээр л зөв замаар явж байгаагаа мэдэх нь өөрөө том хүч юм байна."</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <h2 class="section-title">БУДИЛААНААС → БҮТЭЦ РҮҮ.</h2>
+  <p class="section-sub" style="margin: 0 auto 40px;">Таамгаар биш, илүү зөвөөр эхлэх бүтэц.</p>
+  <div class="price-card">
+    <div class="popular-badge">ХАМГИЙН ИХ СОНГОГДДОГ</div>
+    <div class="price-label">Өсөлт</div>
+    <div class="price-amount">29,000₮</div>
+    <div class="price-sub">Нэг удаагийн төлбөр • Шууд access</div>
+    <div class="price-features">
+      <div class="price-feature"><span class="check">✓</span> Шууд access</div>
+      <div class="price-feature"><span class="check">✓</span> Системтэй бүтэц</div>
+      <div class="price-feature"><span class="check">✓</span> Утсаар уншихад тохиром</div>
+      <div class="price-feature"><span class="check">✓</span> Дижитал формат</div>
+      <div class="price-feature"><span class="check">✓</span> Дагахад амар</div>
+    </div>
+    <a href="#payment" class="btn-primary" style="width:100%; text-align:center; display:block;">Одоо авах</a>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section class="payment" id="payment">
+  <div class="payment-card">
+    <h2>Төлбөрийн мэдээлэл</h2>
+    <div class="payment-info">
+      <div class="label">Банк</div>
+      <div class="value">Хаанбанк</div>
+    </div>
+    <div class="payment-info">
+      <div class="label">Дансны дугаар</div>
+      <div class="value">5822 **** ****</div>
+    </div>
+    <div class="payment-info">
+      <div class="label">Нэр</div>
+      <div class="value">Ганжаргал</div>
+    </div>
+    <div class="payment-info">
+      <div class="label">Утга</div>
+      <div class="value">өөрийн IG нэр</div>
+    </div>
+    <hr class="payment-divider">
+    <div class="payment-note">
+      Төлсний дараа screenshot-оо Instagram DM-ээр илгээн үү.<br>
+      24 цагийн дотор ebook илгээнэ.
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2 class="section-title">ТҮГЭЭМЭЛ АСУУЛТУУД</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Энэ ebook яг юу өгдөг вэ? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Өндөр болох системтэй бүтэц, яг юунаас эхлэх дараалал, цагаа үрүүлдэг зүйлсийг таних арга.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Төлбөрөө яаж хийх вэ? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Хаанбанк дансруу шилжүүлж, screenshot-оо Instagram DM-ээр илгээнэ үү.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Энэ нь шууд үр дүн амлах уу? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Үр дүн чиний хэрэгжүүлэлтээс хамаарна. Бид чамд зөв систем өгнө, харин хэрэгжүүлэх нь чиний ажил.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Надад ямар нэгэн тусгай төхөөрөмж хэрэгтэй юу? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Үгүй. Утас л хангалттай. Дижитал формат тул хаанаас ч уншиж болно.</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>БУДИЛААНААС<br>БҮТЭЦ РҮҮ.</h2>
+  <p>Чиний өмнө байгаа бүх асуултын хариулт ердөө нэг системийн цаана бий.</p>
+  <a href="#payment" class="btn-primary">Одоо эхлэх — 29,000₮</a>
+</section>
+
+<footer>
+  © 2025 The Height Club · Өсөлтийн систем
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+    const icon = el.querySelector('.faq-icon');
+    icon.textContent = el.classList.contains('open') ? '−' : '+';
+  }
+</script>
+</body>
+</html>
