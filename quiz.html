@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Өөрийн өсөлтийн боломжийг шалга | The Height Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808;
+    --bg2: #0f0f0f;
+    --card: #141414;
+    --border: #222;
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #fff;
+    --blue: #3b6ff5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; }
+  .nav-btn {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+  }
+
+  .quiz-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* INTRO SCREEN */
+  .intro-screen {
+    text-align: center;
+    animation: fadeUp 0.6s ease both;
+  }
+  .intro-screen h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 10vw, 56px);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .intro-screen h1 span { color: var(--blue); }
+  .intro-screen p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .intro-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 28px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .intro-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 99px;
+    height: 4px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: none;
+  }
+
+  /* QUESTION */
+  .question-screen { display: none; animation: fadeUp 0.4s ease both; }
+  .question-screen.active { display: block; }
+  .q-number {
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 8vw, 42px);
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option:hover {
+    border-color: var(--blue);
+    background: #0d1a3a;
+    transform: translateX(4px);
+  }
+  .option.selected {
+    border-color: var(--blue);
+    background: #0d1a3a;
+  }
+  .option-icon {
+    width: 32px; height: 32px;
+    background: var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* INFO CONTEXT */
+  .info-context {
+    background: #0d1a3a;
+    border: 1px solid #1a3a7a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #a0b4e0;
+    line-height: 1.6;
+  }
+  .info-context strong { color: var(--blue); }
+
+  /* CALCULATING */
+  .calculating-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 0;
+    animation: fadeUp 0.4s ease both;
+  }
+  .calculating-screen.active { display: block; }
+  .calc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    margin-bottom: 32px;
+    color: var(--muted);
+  }
+  .calc-bars { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+  .calc-bar-row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+  .calc-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .calc-bar-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 1s ease;
+  }
+
+  /* RESULT */
+  .result-screen { display: none; animation: fadeUp 0.5s ease both; }
+  .result-screen.active { display: block; }
+  .result-hero {
+    text-align: center;
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .result-label {
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .result-cm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 1;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .result-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .result-badge {
+    display: inline-block;
+    background: #0d1a3a;
+    border: 1px solid var(--blue);
+    border-radius: 99px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  .result-breakdown {
+    margin-bottom: 32px;
+  }
+  .result-breakdown h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--muted);
+  }
+  .factor-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .factor-row:last-child { border-bottom: none; }
+  .factor-icon { font-size: 20px; width: 32px; text-align: center; }
+  .factor-info { flex: 1; }
+  .factor-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .factor-desc { font-size: 12px; color: var(--muted); }
+  .factor-score {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .result-warning {
+    background: #1a0f0f;
+    border: 1px solid #3a1a1a;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 32px;
+    font-size: 14px;
+    color: #e08080;
+    line-height: 1.7;
+  }
+  .result-warning strong { color: #ff6060; }
+
+  .btn-primary {
+    display: block;
+    background: var(--accent); color: #000;
+    padding: 18px 40px; border-radius: 50px;
+    font-weight: 700; font-size: 16px;
+    text-decoration: none; cursor: pointer;
+    border: none;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,0.15); }
+
+  .retake-btn {
+    display: block;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .start-btn {
+    display: block;
+    background: var(--accent); color: #000;
+    padding: 18px 40px; border-radius: 50px;
+    font-weight: 700; font-size: 16px;
+    text-decoration: none; cursor: pointer;
+    border: none;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,0.15); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  footer {
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">THE HEIGHT CLUB</div>
+  <a href="index.html" class="nav-btn">Буцах</a>
+</nav>
+
+<div class="quiz-wrapper">
+
+  <!-- INTRO -->
+  <div class="intro-screen" id="introScreen">
+    <h1>ӨӨРИЙН ӨСӨЛТИЙН<br><span>БОЛОМЖИЙГ</span><br>ШАЛГА</h1>
+    <p>3 асуултад хариулаад чи хэдэн см өсөх боломжтойг мэд.</p>
+    <div class="intro-meta">
+      <span>⏱ 2 минут</span>
+      <span>📊 3 асуулт</span>
+      <span>🎯 Personalized үр дүн</span>
+    </div>
+    <p style="font-size:13px; color: var(--muted);">Энэ тооцоо чиний нас, өндөр, генетик дээр үндэслэнэ.</p>
+    <br>
+    <button class="start-btn" onclick="startQuiz()">Шалгах →</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-label" id="progressLabel">1 / 3</div>
+  <div class="progress-bar-wrap" id="progressBar">
+    <div class="progress-bar-fill" id="progressFill" style="width: 33%"></div>
+  </div>
+
+  <!-- QUESTION 1 -->
+  <div class="question-screen" id="q1">
+    <div class="q-number">Асуулт 1 / 3</div>
+    <div class="q-text">ЧИ ХЭДЭН НАСТАЙ ВЭ?</div>
+    <div class="info-context">
+      <strong>Яагаад энэ асуулт?</strong> Нас бол өсөлтийн хамгийн чухал хүчин зүйл. Өсөлтийн цонх нь насаар тодорхойлогддог.
+    </div>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'age', '15-17', 5)">
+        <div class="option-icon">🔥</div>
+        <span>15–17 нас — Өсөлтийн оргил үе</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'age', '18-20', 4)">
+        <div class="option-icon">⚡</div>
+        <span>18–20 нас — Боломж байна</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'age', '21-22', 2)">
+        <div class="option-icon">⏳</div>
+        <span>21–22 нас — Хязгаартай боломж</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'age', '23+', 1)">
+        <div class="option-icon">🧠</div>
+        <span>23+ нас — Постур болон техник</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION 2 -->
+  <div class="question-screen" id="q2">
+    <div class="q-number">Асуулт 2 / 3</div>
+    <div class="q-text">ОДОО ХЭДЭН СМ ВЭ?</div>
+    <div class="info-context">
+      <strong>Яагаад энэ асуулт?</strong> Одоогийн өндөр чинь хаана байгааг, хэр их боломж үлдсэнийг тодорхойлно.
+    </div>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'height', '155-160', 5)">
+        <div class="option-icon">📏</div>
+        <span>155–160 см</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'height', '161-165', 4)">
+        <div class="option-icon">📏</div>
+        <span>161–165 см</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'height', '166-170', 3)">
+        <div class="option-icon">📏</div>
+        <span>166–170 см</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'height', '171+', 2)">
+        <div class="option-icon">📏</div>
+        <span>171+ см</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION 3 -->
+  <div class="question-screen" id="q3">
+    <div class="q-number">Асуулт 3 / 3</div>
+    <div class="q-text">ААВ ЭЭЖ ХЭДЭН СМ ВЭ?</div>
+    <div class="info-context">
+      <strong>Яагаад энэ асуулт?</strong> Генетик бол өсөлтийн 60–80% тодорхойлдог. Гэхдээ үлдсэн 20–40% нь чиний гарт байна.
+    </div>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'genetics', 'tall', 5)">
+        <div class="option-icon">🧬</div>
+        <span>Аав 175+ · Ээж 163+ — Өндөр генетик</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'genetics', 'medium', 3)">
+        <div class="option-icon">🧬</div>
+        <span>Аав 168–174 · Ээж 157–162 — Дундаж</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'genetics', 'short', 2)">
+        <div class="option-icon">🧬</div>
+        <span>Аав 160–167 · Ээж 150–156 — Намхан генетик</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'genetics', 'unknown', 3)">
+        <div class="option-icon">❓</div>
+        <span>Мэдэхгүй</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALCULATING -->
+  <div class="calculating-screen" id="calcScreen">
+    <div class="calc-title">ТООЦООЛЖ БАЙНА...</div>
+    <div class="calc-bars">
+      <div class="calc-bar-row">
+        <span>Нас</span>
+        <div class="calc-bar-track"><div class="calc-bar-fill" id="bar1"></div></div>
+      </div>
+      <div class="calc-bar-row">
+        <span>Өндөр</span>
+        <div class="calc-bar-track"><div class="calc-bar-fill" id="bar2"></div></div>
+      </div>
+      <div class="calc-bar-row">
+        <span>Генетик</span>
+        <div class="calc-bar-track"><div class="calc-bar-fill" id="bar3"></div></div>
+      </div>
+      <div class="calc-bar-row">
+        <span>Боломж</span>
+        <div class="calc-bar-track"><div class="calc-bar-fill" id="bar4"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-hero">
+      <div class="result-label">Чиний өсөлтийн боломж</div>
+      <div class="result-cm" id="resultCm">+3 СМ</div>
+      <div class="result-sub" id="resultSub">Зөв системтэй хандвал</div>
+      <div class="result-badge" id="resultBadge">🟢 Боломж байна</div>
+    </div>
+
+    <div class="result-breakdown">
+      <h3>ДҮГНЭЛТ</h3>
+      <div class="factor-row">
+        <div class="factor-icon">🗓</div>
+        <div class="factor-info">
+          <div class="factor-name">Насны боломж</div>
+          <div class="factor-desc" id="factorAge">—</div>
+        </div>
+        <div class="factor-score" id="factorAgeScore">—</div>
+      </div>
+      <div class="factor-row">
+        <div class="factor-icon">📏</div>
+        <div class="factor-info">
+          <div class="factor-name">Одоогийн өндөр</div>
+          <div class="factor-desc" id="factorHeight">—</div>
+        </div>
+        <div class="factor-score" id="factorHeightScore">—</div>
+      </div>
+      <div class="factor-row">
+        <div class="factor-icon">🧬</div>
+        <div class="factor-info">
+          <div class="factor-name">Генетик</div>
+          <div class="factor-desc" id="factorGenetics">—</div>
+        </div>
+        <div class="factor-score" id="factorGeneticsScore">—</div>
+      </div>
+    </div>
+
+    <div class="result-warning" id="resultWarning"></div>
+
+    <a href="index.html#payment" class="btn-primary">Яаж өсөх системийг авах — 29,000₮ →</a>
+    <span class="retake-btn" onclick="retakeQuiz()">Дахин шалгах</span>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 The Height Club · Өсөлтийн систем
+</footer>
+
+<script>
+  let answers = { age: null, height: null, genetics: null };
+  let ageScore = 0, heightScore = 0, geneticsScore = 0;
+  let currentQ = 0;
+
+  function startQuiz() {
+    document.getElementById('introScreen').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'block';
+    document.getElementById('progressLabel').style.display = 'block';
+    showQuestion(1);
+  }
+
+  function showQuestion(n) {
+    document.querySelectorAll('.question-screen').forEach(q => q.classList.remove('active'));
+    document.getElementById('q' + n).classList.add('active');
+    currentQ = n;
+    updateProgress(n);
+  }
+
+  function updateProgress(n) {
+    const pct = (n / 3) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = n + ' / 3';
+  }
+
+  function selectOption(el, key, val, score) {
+    // Highlight
+    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[key] = val;
+
+    if (key === 'age') ageScore = score;
+    if (key === 'height') heightScore = score;
+    if (key === 'genetics') geneticsScore = score;
+
+    setTimeout(() => {
+      if (key === 'age') showQuestion(2);
+      else if (key === 'height') showQuestion(3);
+      else if (key === 'genetics') showCalculating();
+    }, 400);
+  }
+
+  function showCalculating() {
+    document.querySelectorAll('.question-screen').forEach(q => q.classList.remove('active'));
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('progressLabel').style.display = 'none';
+    const calc = document.getElementById('calcScreen');
+    calc.classList.add('active');
+
+    setTimeout(() => { document.getElementById('bar1').style.width = (ageScore / 5 * 100) + '%'; }, 300);
+    setTimeout(() => { document.getElementById('bar2').style.width = (heightScore / 5 * 100) + '%'; }, 700);
+    setTimeout(() => { document.getElementById('bar3').style.width = (geneticsScore / 5 * 100) + '%'; }, 1100);
+    setTimeout(() => { document.getElementById('bar4').style.width = '85%'; }, 1500);
+    setTimeout(() => showResult(), 2800);
+  }
+
+  function showResult() {
+    document.getElementById('calcScreen').classList.remove('active');
+    const result = document.getElementById('resultScreen');
+    result.classList.add('active');
+
+    // Calculate result
+    let cm, sub, badge, warning;
+    const age = answers.age;
+    const gen = answers.genetics;
+
+    if (age === '15-17') {
+      cm = gen === 'tall' ? '+5–7 СМ' : gen === 'short' ? '+3–5 СМ' : '+4–6 СМ';
+      sub = 'Чи өсөлтийн оргил үедээ байна. Зөв систем чухал.';
+      badge = '🔥 Маш өндөр боломж';
+      warning = '<strong>Анхаар:</strong> Энэ нас бол хамгийн чухал цонх. Зөв мэдлэггүйгээр энэ боломжийг алдах эрсдэлтэй. Ихэнх хүн яг энэ үедээ буруу зүйл хийж цагаа үрдэг.';
+    } else if (age === '18-20') {
+      cm = gen === 'tall' ? '+3–5 СМ' : gen === 'short' ? '+2–3 СМ' : '+2–4 СМ';
+      sub = 'Боломж байгаа ч цаг дарагдаж байна.';
+      badge = '⚡ Боломж байна';
+      warning = '<strong>Анхаар:</strong> 18–20 нас бол сүүлийн цонх. Одоо эхлэхгүй бол дараа хожуу болно. Зөв системтэй хандвал үр дүн гарах боломжтой.';
+    } else if (age === '21-22') {
+      cm = '+1–3 СМ';
+      sub = 'Постур болон техникийн аргаар.';
+      badge = '⏳ Хязгаартай боломж';
+      warning = '<strong>Чухал:</strong> 21–22 насанд биологийн өсөлт удааширдаг. Гэхдээ зөв постур, тэнийх, унтах систем ашиглавал 1–3 см нэмэгдэх боломжтой хэвээр байна.';
+    } else {
+      cm = '+1–2 СМ';
+      sub = 'Постур засах, зөв техникээр.';
+      badge = '🧠 Техникийн арга';
+      warning = '<strong>Мэдэх хэрэгтэй:</strong> 23+ насанд биологийн өсөлт зогссон байдаг. Гэхдээ зөв постур засаж, нуруугаа тэнийлгэснээр 1–2 см илүү өндөр харагдах боломжтой.';
+    }
+
+    document.getElementById('resultCm').textContent = cm;
+    document.getElementById('resultSub').textContent = sub;
+    document.getElementById('resultBadge').textContent = badge;
+    document.getElementById('resultWarning').innerHTML = warning;
+
+    // Factors
+    const ageDescs = { '15-17': 'Оргил үе — бүх боломж нээлттэй', '18-20': 'Сайн боломж байна', '21-22': 'Хязгаартай боломж', '23+': 'Постур техник ашиглана' };
+    const ageScores = { '15-17': '🔥 Өндөр', '18-20': '✅ Дунд', '21-22': '⚠️ Бага', '23+': '🔵 Техник' };
+    document.getElementById('factorAge').textContent = ageDescs[age] || '—';
+    document.getElementById('factorAgeScore').textContent = ageScores[age] || '—';
+
+    const hDescs = { '155-160': 'Боломж их байна', '161-165': 'Дундаж боломж', '166-170': 'Хэвийн', '171+': 'Нэмэлт техник хэрэгтэй' };
+    document.getElementById('factorHeight').textContent = hDescs[answers.height] || '—';
+    document.getElementById('factorHeightScore').textContent = heightScore >= 4 ? '✅ Тааламжтай' : heightScore === 3 ? '🔵 Дунд' : '⚠️ Хязгаартай';
+
+    const gDescs = { 'tall': 'Өндөр генетик — давуу тал бий', 'medium': 'Дундаж генетик', 'short': 'Намхан генетик — арга техник чухал', 'unknown': 'Мэдэгдэхгүй' };
+    document.getElementById('factorGenetics').textContent = gDescs[answers.genetics] || '—';
+    document.getElementById('factorGeneticsScore').textContent = gen === 'tall' ? '✅ Давуу' : gen === 'short' ? '⚠️ Сорилт' : '🔵 Дунд';
+  }
+
+  function retakeQuiz() {
+    answers = { age: null, height: null, genetics: null };
+    ageScore = 0; heightScore = 0; geneticsScore = 0;
+    document.getElementById('resultScreen').classList.remove('active');
+    document.getElementById('introScreen').style.display = 'block';
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  }
+</script>
+</body>
+</html>
