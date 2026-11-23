@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Height Optimization System 2.0 | The Height Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0a0a0a;--white:#f5f5f0;--blue:#3B5BFF;--blue-dark:#2a45e8;--gray:#141414;--gray2:#1e1e1e;--muted:#777}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;max-width:480px;margin:0 auto;line-height:1.6}
+  nav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.94);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #1a1a1a}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px}
+  .logo span,.blue{color:var(--blue)}
+  .nav-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
+
+  .hero{padding:44px 20px 28px;text-align:center;animation:fadeUp .5s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .badge{display:inline-flex;gap:6px;background:rgba(59,91,255,.12);border:1px solid rgba(59,91,255,.35);color:#7b96ff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:24px}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,11vw,60px);line-height:.95;letter-spacing:1px;margin-bottom:18px}
+  .hero-sub{font-size:15px;color:#9a9a9a;margin-bottom:28px;padding:0 6px}
+  .path-box{display:none;background:#0d1433;border:1px solid rgba(59,91,255,.4);border-radius:14px;padding:16px;margin-bottom:22px;text-align:left;font-size:14px;color:#b8c6f5}
+  .path-box b{color:#fff}
+
+  .cta{display:block;width:100%;background:var(--blue);color:#fff;font-size:16px;font-weight:700;padding:18px;border-radius:12px;border:none;cursor:pointer;text-align:center;text-decoration:none;letter-spacing:.5px;margin-bottom:10px;transition:background .2s}
+  .cta:hover{background:var(--blue-dark)} .cta:active{transform:scale(.98)}
+  .cta.ghost{background:var(--gray2);border:1px solid #333;color:#ccc;font-size:14px;font-weight:500}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+  .stat{background:var(--gray);border:1px solid #1e1e1e;border-radius:12px;padding:14px 6px;text-align:center}
+  .stat b{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--blue);line-height:1;display:block}
+  .stat span{font-size:11px;color:var(--muted)}
+
+  .div{height:1px;background:#181818;margin:36px 20px}
+  .sec{padding:0 20px}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:14px}
+  h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,9vw,42px);line-height:1;letter-spacing:.5px;text-align:center;margin-bottom:20px}
+  .p{font-size:14px;color:#aaa;margin-bottom:12px}
+  .card{background:var(--gray);border:1px solid #1e1e1e;border-radius:14px;padding:16px;margin-bottom:10px}
+  .card h3{font-size:15px;margin-bottom:4px}
+  .card p{font-size:13px;color:var(--muted)}
+
+  .pain{list-style:none}
+  .pain li{position:relative;padding:12px 0 12px 30px;border-bottom:1px solid #1a1a1a;font-size:14px;color:#ccc}
+  .pain li:last-child{border-bottom:none}
+  .pain li:before{content:"✕";position:absolute;left:4px;color:#ff6b6b;font-weight:800}
+
+  .layer{display:flex;gap:14px;align-items:flex-start}
+  .layer .n{flex:0 0 40px;height:40px;border-radius:10px;background:rgba(59,91,255,.15);color:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px}
+  .path-l{background:var(--blue);color:#fff}
+
+  .myth{font-size:13px;color:#ff8080;font-weight:700;margin-bottom:4px}
+  .src{font-size:11px;color:#555;margin-top:6px}
+
+  .ch{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #1a1a1a;font-size:14px}
+  .ch:last-child{border-bottom:none}
+  .ch b{color:var(--blue);font-family:'Bebas Neue',sans-serif;font-size:18px;min-width:26px}
+
+  .proof img{width:100%;border-radius:12px;margin-bottom:10px;display:block;border:1px solid #1e1e1e}
+  .proof-note{font-size:12px;color:#666;text-align:center;line-height:1.5;margin-top:6px}
+
+  .offer{background:var(--gray);border:2px solid var(--blue);border-radius:18px;padding:22px 18px}
+  .stack{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #222;font-size:14px}
+  .stack:last-of-type{border-bottom:none}
+  .stack span:last-child{color:var(--blue);font-weight:700}
+  .price{text-align:center;margin:18px 0 6px}
+  .price-num{font-family:'Bebas Neue',sans-serif;font-size:58px;line-height:1}
+  .price-note{font-size:12px;color:var(--muted)}
+
+  .countdown-wrap{display:none;margin:16px 0}
+  .cd-top{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;text-align:center;margin-bottom:8px}
+  .countdown{display:flex;justify-content:center;gap:6px}
+  .cd-block{background:#0a0a0a;border:1px solid #222;border-radius:10px;padding:8px 10px;min-width:56px;text-align:center}
+  .cd-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--blue);line-height:1;display:block}
+  .cd-lbl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+
+  .g-box{background:linear-gradient(135deg,#0d1433,#0a0f28);border:1px solid rgba(59,91,255,.3);border-radius:16px;padding:24px 18px;text-align:center}
+  .g-icon{font-size:42px;display:block;margin-bottom:10px}
+  .g-title{font-family:'Bebas Neue',sans-serif;font-size:30px;margin-bottom:8px}
+  .g-desc{font-size:14px;color:#aaa}
+
+  .faq-item{border-bottom:1px solid #181818;padding:16px 0}
+  .faq-q{font-size:14px;font-weight:700;margin-bottom:6px}
+  .faq-a{font-size:13px;color:var(--muted)}
+
+  .final{padding:36px 20px 120px;text-align:center}
+  .final h2{font-size:clamp(38px,10vw,52px);margin-bottom:12px}
+  .final p{font-size:14px;color:#999;margin-bottom:24px}
+  footer{text-align:center;font-size:11px;color:#555;padding:0 20px 110px}
+
+  .sticky{position:fixed;bottom:0;left:50%;transform:translate(-50%,110%);width:100%;max-width:480px;padding:12px 20px;background:rgba(10,10,10,.96);border-top:1px solid #1e1e1e;z-index:60;transition:transform .25s}
+  .sticky.show{transform:translate(-50%,0)}
+  .sticky .cta{margin:0}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:flex-end}
+  .modal-overlay.active{display:flex}
+  .modal{background:#141414;border:1px solid #222;border-radius:24px 24px 0 0;padding:26px 20px 36px;width:100%;animation:slideUp .3s ease}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+  .modal-handle{width:40px;height:4px;background:#333;border-radius:2px;margin:0 auto 20px}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;margin-bottom:4px}
+  .modal-sub{font-size:13px;color:#777;text-align:center;margin-bottom:20px}
+  .bank-box{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-bottom:12px}
+  .bank-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .bank-row:last-child{margin-bottom:0}
+  .bank-label{font-size:12px;color:#666}
+  .bank-value{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .copy-btn{background:rgba(59,91,255,.15);color:var(--blue);font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;cursor:pointer;border:none}
+  .notice{background:rgba(59,91,255,.08);border:1px solid rgba(59,91,255,.2);border-radius:12px;padding:13px;margin-bottom:10px;font-size:13px;color:#aaa;text-align:center}
+  .notice strong{color:#fff}
+  .notice.green{background:rgba(76,217,100,.08);border-color:rgba(76,217,100,.2)}
+  .modal-close{display:block;width:100%;background:transparent;border:1px solid #2a2a2a;color:#666;font-size:14px;padding:13px;border-radius:12px;cursor:pointer;margin-top:6px}
+</style>
+</head>
+<body>
+
+<script>
+  // ===== ТОХИРГОО — зөвхөн энд өөрчил =====
+  const CONFIG = {
+    price: '29,000₮',
+    deadline: '',            // ЖИНХЭНЭ огноо, жишээ: '2026-11-30T23:59:00+08:00'. Хоосон бол timer нуугдана
+    nextPrice: '39,000₮',
+    account: '5111829731',
+    holder: 'Ганжаргал',
+    instagram: 'the.height.club'
+  };
+</script>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">ТӨЛБӨР ХИЙХ</div>
+    <div class="modal-sub">Хаанбанк руу шилжүүлэг хийнэ</div>
+    <div class="bank-box">
+      <div class="bank-row"><span class="bank-label">Банк</span><span class="bank-value">Хаанбанк</span></div>
+      <div class="bank-row"><span class="bank-label">Данс</span><span class="bank-value"><span class="js-acc"></span><button class="copy-btn" onclick="copyAcc(this)">ХУУЛАХ</button></span></div>
+      <div class="bank-row"><span class="bank-label">Хүлээн авагч</span><span class="bank-value js-holder"></span></div>
+      <div class="bank-row"><span class="bank-label">Дүн</span><span class="bank-value blue js-price"></span></div>
+    </div>
+    <div class="notice">📌 Гүйлгээний утганд <strong>Instagram нэрээ</strong> бич<br><span style="color:#666;font-size:12px">Жишээ: @username</span></div>
+    <div class="notice green">✅ Шилжүүлсний дараа доорх товчийг дарж <strong>screenshot-оо илгээ</strong>. PDF ном + Telegram группийн линкийг 24 цагийн дотор Instagram-аар авна.</div>
+    <a class="cta" href="https://tally.so/r/WJ8pER" target="_blank" rel="noopener" style="margin-top:6px">Төлбөрөө баталгаажуулах →</a>
+    <button class="modal-close" onclick="closeModal()">Хаах</button>
+  </div>
+</div>
+
+<nav>
+  <div class="logo">THE <span>HEIGHT</span> CLUB</div>
+  <a class="nav-btn" href="#offer" style="text-decoration:none">Авах</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Height Optimization System 2.0</div>
+  <h1>ӨСӨЛТӨӨ<br><span class="blue">ТААМГААР</span> БИШ<br>СИСТЕМЭЭР УДИРД</h1>
+  <p class="hero-sub">Удамшил чамд дээд хязгаар өгдөг. Тэр хязгаартаа хүрэх үү, үгүй юу гэдгийг өдөр тутмын шийдвэр чинь тодорхойлно. Энэ ном сантиметр бүрээ авах замыг алхам алхмаар харуулна.</p>
+
+  <!-- Quiz-ээс ирсэн бол харагдана -->
+  <div class="path-box" id="pathBox"></div>
+
+  <a href="#offer" class="cta">СИСТЕМЭЭ ХАРАХ →</a>
+  <a href="#inside" class="cta ghost">Дотор нь юу байгааг харах ↓</a>
+  <div class="stats">
+    <div class="stat"><b>12</b><span>бүлэг</span></div>
+    <div class="stat"><b>30</b><span>хоногийн хөтөлбөр</span></div>
+    <div class="stat"><b>100%</b><span>эх сурвалжтай</span></div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- PAIN -->
+<div class="sec">
+  <div class="sec-label">Танил уу?</div>
+  <h2>БУДИЛААН ЧИНЬ <span class="blue">БҮТЭЦ</span> ДУТСАНААС</h2>
+  <ul class="pain">
+    <li>TikTok-оос санамсаргүй дасгал хийгээд 2 долоо хоногийн дараа орхисон</li>
+    <li>"30 хоногт 10 см" гэх бүтээгдэхүүнд мөнгө үрэх гэж байсан</li>
+    <li>Өглөө хэмжихэд 2 см өссөн мэт санагдаад орой нь алга болсон</li>
+    <li>"Монгол эр 25 хүртэл өсдөг" гэж сонсоод хүлээсээр байгаа</li>
+    <li>Өсөх боломж үлдсэн эсэхээ огт мэдэхгүй</li>
+  </ul>
+</div>
+
+<div class="div"></div>
+
+<!-- HONEST -->
+<div class="sec">
+  <div class="sec-label">Шударга байя</div>
+  <h2>УДАМШЛААС ДАВУУЛЖ ӨСГӨНӨ ГЭЖ <span class="blue">АМЛАХГҮЙ</span></h2>
+  <p class="p">Ийм арга шинжлэх ухаанд байхгүй. Тийм амлалт өгч байгаа хүн бүр худал хэлж байна. Харин үнэхээр ажилладаг зүйлс бий. Энэ ном тэдгээрийг тоо баримттай, эх сурвалжтай нь нэг дор цуглуулсан.</p>
+  <div class="card layer"><div class="n">1</div><div><h3>Ясны урт</h3><p>Зөвхөн өсөлтийн хавтан нээлттэй үед өөрчлөгдөнө</p></div></div>
+  <div class="card layer"><div class="n">2</div><div><h3>Нурууны шахалт</h3><p>Өдөр бүр ±1.5 см. Бүх насанд хамаатай</p></div></div>
+  <div class="card layer"><div class="n">3</div><div><h3>Байрлал, биеийн бүтэц</h3><p>Ямар ч насанд өөрчлөгддөг</p></div></div>
+  <p class="p" style="text-align:center;margin-top:8px">2, 3 нь 18-аас дээш насныханд ч ажилладаг.</p>
+</div>
+
+<div class="div"></div>
+
+<!-- PATHS -->
+<div class="sec">
+  <div class="sec-label">Ном яаж ажилладаг вэ</div>
+  <h2>ЭХЛЭЭД ТЕСТ. ДАРАА НЬ <span class="blue">ЧИНИЙ ЗАМ</span></h2>
+  <div class="card layer"><div class="n path-l">A</div><div><h3>Өсөж байгаа</h3><p>Өсөлтийг дэмжих: хоол, нойр, хамгаалалт, дасгал</p></div></div>
+  <div class="card layer"><div class="n path-l">B</div><div><h3>Тодорхойгүй</h3><p>Өсөж байгаа эсэхээ баттай тогтоох, хожуу бойжилтын шинж</p></div></div>
+  <div class="card layer"><div class="n path-l">C</div><div><h3>Өсөж дууссан</h3><p>Харагдах өндөр: байрлал, бие, хувцаслалт</p></div></div>
+  <p class="p" style="text-align:center">+ 11 асуулттай "Хаана гацаж байна вэ?" хуудас + 30 хоногийн хөтөлбөр</p>
+</div>
+
+<div class="div"></div>
+
+<!-- MYTHS -->
+<div class="sec">
+  <div class="sec-label">Номноос 3 жишээ</div>
+  <div class="card">
+    <div class="myth">Домог: "Монгол эр 25 хүртэл өсдөг"</div>
+    <p style="color:#ccc;font-size:14px">Ихэнх нь 18–19-д, цөөн хэд нь 21–22 хүртэл өсдөг. 25 хүртэл өсөх хүн бараг байхгүй.</p>
+    <div class="src">Kvist нар (958 хүнд MRI); Crowne нар</div>
+  </div>
+  <div class="card">
+    <div class="myth">Домог: "Өглөө хэмжихэд 2 см өссөн!"</div>
+    <p style="color:#ccc;font-size:14px">Өсөлт биш. Нуруу өглөөнөөс орой хүртэл 1.5 см орчим шахагддаг. Хэн ч өглөө өндөр гарна.</p>
+    <div class="src">Clinical Biomechanics; J-STAGE</div>
+  </div>
+  <div class="card">
+    <div class="myth">Домог: "Аав ээж намхан юм чинь би дууссан"</div>
+    <p style="color:#ccc;font-size:14px">Удамшил дээд хязгаарыг л тогтоодог. Монголд таваас доош насны хүүхдийн өсөлтийн хоцрогдол 1992 онд 33.1% байсан бол 2018 онд 9.4% болсон. Ген биш, орчин өөрчлөгдсөн.</p>
+    <div class="src">WHO өгөгдөл</div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- INSIDE -->
+<div class="sec" id="inside">
+  <div class="sec-label">Дотор нь</div>
+  <h2>12 БҮЛЭГ</h2>
+  <div class="card">
+    <div class="ch"><b>01</b>Өндөр юунаас шалтгаалдаг вэ</div>
+    <div class="ch"><b>02</b>Бодит ба харагдах өндөр</div>
+    <div class="ch"><b>03</b>Өсөх боломж үлдсэн үү? Тест ба A/B/C зам</div>
+    <div class="ch"><b>04</b>Эмчид хэзээ хандах вэ</div>
+    <div class="ch"><b>05</b>Хоол тэжээл</div>
+    <div class="ch"><b>06</b>Нойр ба нөхөн сэргэлт</div>
+    <div class="ch"><b>07</b>Өсөлтийг хамгаалах</div>
+    <div class="ch"><b>08</b>Дасгалын хөтөлбөр</div>
+    <div class="ch"><b>09</b>Харагдах өндөр</div>
+    <div class="ch"><b>10</b>Домгууд</div>
+    <div class="ch"><b>11</b>30 хоногийн хөтөлбөр</div>
+    <div class="ch"><b>12</b>Сэтгэлгээ ба дүгнэлт</div>
+  </div>
+  <p class="p" style="text-align:center">+ Хавсралт: тестийн хуудас, дасгалын алхам алхмаар заавар, эх сурвалжийн жагсаалт</p>
+</div>
+
+<div class="div"></div>
+
+<!-- PROOF -->
+<div class="sec">
+  <div class="sec-label">Худалдан авагчдын бичсэн</div>
+  <div class="proof">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/2.jpeg" alt="Сэтгэгдэл" loading="lazy">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/3.jpeg" alt="Сэтгэгдэл" loading="lazy">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/4.jpeg" alt="Сэтгэгдэл" loading="lazy">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/5.jpeg" alt="Сэтгэгдэл" loading="lazy">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/1.jpeg" alt="Сэтгэгдэл" loading="lazy">
+    <img src="https://raw.githubusercontent.com/theheightclub/mn/main/6.jpeg" alt="Сэтгэгдэл" loading="lazy">
+  </div>
+  <p class="proof-note">Өмнөх хувилбарыг авсан хүмүүсийн өөрсдийн бичсэн сэтгэгдэл. Хүн бүрийн үр дүн нас, удамшил, хэрэгжүүлэлтээс шалтгаалж өөр өөр байна.</p>
+</div>
+
+<div class="div"></div>
+
+<!-- OFFER -->
+<div class="sec" id="offer">
+  <div class="offer">
+    <div class="sec-label">Чи авах зүйлс</div>
+    <div class="stack"><span>Height Optimization System 2.0 · 35 хуудас PDF</span><span>✓</span></div>
+    <div class="stack"><span>Өсөлтийн тест + A/B/C зам</span><span>✓</span></div>
+    <div class="stack"><span>"Хаана гацаж байна вэ?" 11 асуулт</span><span>✓</span></div>
+    <div class="stack"><span>30 хоногийн хөтөлбөр</span><span>✓</span></div>
+    <div class="stack"><span>Дасгалын алхам алхмаар заавар</span><span>✓</span></div>
+    <div class="stack"><span>Худалдан авагчдын хаалттай Telegram групп</span><span>✓</span></div>
+    <div class="stack"><span>Ирээдүйн бүх шинэчлэл үнэгүй</span><span>✓</span></div>
+
+    <div class="countdown-wrap" id="cdWrap">
+      <div class="cd-top">Үнэ <span class="js-next"></span> болох хүртэл</div>
+      <div class="countdown">
+        <div class="cd-block"><span class="cd-num" id="cdD">00</span><div class="cd-lbl">өдөр</div></div>
+        <div class="cd-block"><span class="cd-num" id="cdH">00</span><div class="cd-lbl">цаг</div></div>
+        <div class="cd-block"><span class="cd-num" id="cdM">00</span><div class="cd-lbl">мин</div></div>
+        <div class="cd-block"><span class="cd-num" id="cdS">00</span><div class="cd-lbl">сек</div></div>
+      </div>
+    </div>
+
+    <div class="price">
+      <div class="price-num js-price"></div>
+      <div class="price-note">Нэг удаа төлнө · Шууд утсандаа уншина · Монгол хэлээр</div>
+    </div>
+    <a href="#" class="cta" onclick="openModal();return false;" style="margin-top:14px">ОДОО АВАХ →</a>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- GUARANTEE — ӨӨРӨӨ ШИЙДЭЭД ҮЛДЭЭ, ЭСВЭЛ ЭНЭ БЛОКИЙГ УСТГА -->
+<div class="sec" id="guarantee">
+  <div class="g-box">
+    <span class="g-icon">🛡️</span>
+    <div class="g-title">ЭРСДЭЛГҮЙ</div>
+    <div class="g-desc">Уншаад өмнө нь мэдээгүй нэг ч шинэ зүйл олоогүй бол 7 хоногийн дотор DM бичээрэй. Мөнгийг чинь буцаана.</div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- FAQ -->
+<div class="sec">
+  <div class="sec-label">Түгээмэл асуулт</div>
+  <div class="faq-item"><div class="faq-q">18-аас дээш настай. Надад хэрэгтэй юу?</div>
+    <div class="faq-a">Тийм. Ясны урт хавтан хаагдсаны дараа өөрчлөгдөхгүй. Харин нурууны шахалт, байрлал, биеийн бүтэц ямар ч насанд өөрчлөгддөг. 9-р бүлэг яг үүнд зориулагдсан. Өсөх боломж үлдсэн эсэхээ 3-р бүлгийн тестээр мэднэ.</div></div>
+  <div class="faq-item"><div class="faq-q">Хэдэн см өсгөнө гэж баталгаа өгөх үү?</div>
+    <div class="faq-a">Үгүй. Хэдэн см гэж амлаж байгаа хүн худал хэлж байна. Энэ ном боломжит хязгаартаа бүрэн хүрэх, байгаа өндрөө бүрэн харуулах системийг өгнө.</div></div>
+  <div class="faq-item"><div class="faq-q">Мэдээлэл нь хаанаас авсан бэ?</div>
+    <div class="faq-a">Баримт бүр эрдэм шинжилгээний судалгаа эсвэл эмнэлгийн байгууллагын удирдамжаас авсан. Холбоос нь текст дотроо болон номын төгсгөлд бий.</div></div>
+  <div class="faq-item"><div class="faq-q">Бэлдмэл, тоног төхөөрөмж хэрэгтэй юу?</div>
+    <div class="faq-a">Үгүй. Утас, хана, хэмжих тууз хангалттай. Ном ямар ч бэлдмэл зарахгүй.</div></div>
+  <div class="faq-item"><div class="faq-q">Хуучин хувилбарыг авсан. Шинийг дахин авах уу?</div>
+    <div class="faq-a">Үгүй. Telegram группт шинэ хувилбар байршсан байгаа.</div></div>
+  <div class="faq-item"><div class="faq-q">Төлбөр төлсний дараа хэр удаж авах вэ?</div>
+    <div class="faq-a">"Төлбөрөө баталгаажуулах" маягтаар screenshot-оо илгээсний дараа 24 цагийн дотор Instagram-аар PDF болон Telegram группийн линкийг илгээнэ.</div></div>
+</div>
+
+<!-- FINAL -->
+<div class="final">
+  <h2>УДАМШЛАА ЧИ СОНГООГҮЙ.<br><span class="blue">ХЭР БҮРЭН АШИГЛАХАА</span><br>ЧИ ШИЙДНЭ.</h2>
+  <p>Боломжоосоо нэг ч сантиметр бүү алд.</p>
+  <a href="#" class="cta" onclick="openModal();return false;">СИСТЕМЭЭ АВАХ — <span class="js-price"></span></a>
+</div>
+
+<footer>© 2026 The Height Club · Энэ ном эмчийн зөвлөгөөг орлохгүй.</footer>
+
+<div class="sticky" id="sticky"><a href="#offer" class="cta">СИСТЕМЭЭ АВАХ →</a></div>
+
+<script>
+  // config бөглөх
+  const $$=s=>document.querySelectorAll(s);
+  $$('.js-price').forEach(e=>e.textContent=CONFIG.price);
+  $$('.js-next').forEach(e=>e.textContent=CONFIG.nextPrice);
+  $$('.js-acc').forEach(e=>e.textContent=CONFIG.account);
+  $$('.js-holder').forEach(e=>e.textContent=CONFIG.holder);
+
+  function openModal(){document.getElementById('payModal').classList.add('active')}
+  function closeModal(){document.getElementById('payModal').classList.remove('active')}
+  function copyAcc(b){
+    const done=()=>{b.textContent='ХУУЛСАН ✓';setTimeout(()=>b.textContent='ХУУЛАХ',1800)};
+    if(navigator.clipboard){navigator.clipboard.writeText(CONFIG.account).then(done,done)}
+    else{const t=document.createElement('textarea');t.value=CONFIG.account;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(e){}t.remove();done()}
+  }
+
+  // Quiz-ийн үр дүнгээр hero-г тааруулах
+  (function(){
+    const q=new URLSearchParams(location.search), p=q.get('path'), g=parseInt(q.get('gaps')||'0',10);
+    const txt={
+      A:'<b>Чи A замд байна — өсөж байгаа.</b> Номын 5–8-р бүлэг чиний цонхыг алдахгүй байх системийг харуулна.',
+      B:'<b>Чи B замд байна — тодорхойгүй.</b> Номын 3–4-р бүлэг өсөж байгаа эсэхээ баттай мэдэх аргыг харуулна.',
+      C:'<b>Чи C замд байна — өсөж дууссан.</b> Номын 9-р бүлэг бодит өндрөө бүрэн харуулах системийг харуулна.'
+    }[p];
+    if(!txt) return;
+    const box=document.getElementById('pathBox');
+    box.innerHTML=txt+(g>0?' Тест чинь <b>'+g+' гацаа</b> илрүүлсэн.':'');
+    box.style.display='block';
+  })();
+
+  // Жинхэнэ deadline байвал л timer
+  (function(){
+    if(!CONFIG.deadline) return;
+    const end=new Date(CONFIG.deadline).getTime(); if(isNaN(end)) return;
+    const pad=n=>String(n).padStart(2,'0'), w=document.getElementById('cdWrap');
+    (function tick(){
+      const d=end-Date.now(); if(d<=0){w.style.display='none';return}
+      w.style.display='block'; const s=Math.floor(d/1000);
+      cdD.textContent=pad(Math.floor(s/86400));cdH.textContent=pad(Math.floor(s%86400/3600));
+      cdM.textContent=pad(Math.floor(s%3600/60));cdS.textContent=pad(s%60);
+      setTimeout(tick,1000);
+    })();
+  })();
+
+  // Доод CTA
+  const sticky=document.getElementById('sticky'), offer=document.getElementById('offer');
+  addEventListener('scroll',()=>{
+    const r=offer.getBoundingClientRect(), inOffer=r.top<innerHeight&&r.bottom>0;
+    sticky.classList.toggle('show',scrollY>innerHeight*.8&&!inOffer);
+  },{passive:true});
+</script>
+</body>
+</html>
